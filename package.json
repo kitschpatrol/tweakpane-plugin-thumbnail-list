@@ -1,6 +1,6 @@
 {
 	"name": "@kitschpatrol/tweakpane-plugin-thumbnail-list",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"type": "module",
 	"description": "A fork of tweakpane-plugin-thumbnail-list with Tweakpane 4 compatibility and externalized dependencies.",
 	"repository": "github:kitschpatrol/tweakpane-plugin-thumbnail-list",
