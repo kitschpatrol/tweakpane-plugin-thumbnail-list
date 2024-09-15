@@ -1,9 +1,12 @@
-'use strict';
+import Fs from 'fs';
+import * as Glob from 'glob';
+import Path from 'path';
+import {URL} from 'url';
 
-const Fs = require('fs');
-const Glob = require('glob');
-const Path = require('path');
-const Package = require('../package');
+const Package = JSON.parse(
+	Fs.readFileSync(new URL('../package.json', import.meta.url)),
+);
+
 
 const PATTERN = 'dist/*';
 
