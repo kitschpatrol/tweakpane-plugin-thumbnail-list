@@ -27,3 +27,7 @@ A [PR on the upstream project](https://github.com/donmccurdy/tweakpane-plugin-th
 Note the package's name change from `tweakpane-plugin-thumbnail-list` to `@kitschpatrol/tweakpane-plugin-thumbnail-list`.
 
 PNPM is used as the package manager.
+
+## Versioning
+
+The [upstream project](https://github.com/donmccurdy/tweakpane-plugin-thumbnail-list) is currently zero-versioned. I've proposed version 1.0.0 in the pull-request with Tweakpane 4.0 support. Since a merge doesn't seem imminent, updates to the fork will follow normal [semver](https://semver.org/) practices instead of remaining in sync with hypothetical future updates to the upstream project. I might revisit this if the upstream repo springs back to life.
