@@ -18,7 +18,7 @@ Instead, it gets built into the single-file plugin artifact, which is what's pub
 
 Externalizing this dependency allows build tools like [vite](https://vitejs.dev) to share a single instance of the `@tweakpane/core` code across multiple plugins.
 
-If you're not using a bundler, direct ESM imports from URLs can still work if needed by defining the `@tweakpane/core` dependency in an [importmap](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap).
+If you're not using a bundler, direct ESM imports from URLs can still work by defining the `@tweakpane/core` dependency in an [importmap](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap).
 
 ## Implementation notes
 
