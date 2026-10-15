@@ -4,45 +4,21 @@ on:
     branches: [main]
   workflow_dispatch: {}
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Set GitHub Metadata
     runs-on: ubuntu-latest
-    env:
-      IS_VALID_TOKEN: false
-      HAS_PACKAGE: false
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
-
-      - name: Check for package.json
-        run: |
-          if [ -f package.json ]; then
-            echo "📦 Found package.json"
-            echo "HAS_PACKAGE=true" >> "$GITHUB_ENV"
-            else
-            echo "❌ This action requires a package.json to run"
-            echo "HAS_PACKAGE=false" >> "$GITHUB_ENV"
-          fi
-
-      - name: Validate Access Token
-        if: env.HAS_PACKAGE == 'true'
-        run: |
-          if [ -z ${{ secrets.PERSONAL_ACCESS_TOKEN }} ]; then
-            echo "❌ This action requires a Personal Access token to run"
-            echo "IS_VALID_TOKEN=false" >> "$GITHUB_ENV"
-            else
-            echo "🔑 Authenticated with Personal Access token"
-            echo "IS_VALID_TOKEN=true" >> "$GITHUB_ENV"
-          fi
+          persist-credentials: false
 
       - name: Sync Package info to GitHub
-        if: env.IS_VALID_TOKEN == 'true' && env.HAS_PACKAGE == 'true'
-        uses: kitschpatrol/github-action-repo-sync@v2
+        uses: kitschpatrol/github-action-repo-sync@5e05dd60f1f303764fee57b0d51ce5021b06e8d7 # v5.0.7
         with:
-          TYPE: npm
-          PATH: package.json
           TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
