@@ -1,33 +1,103 @@
-# @kitschpatrol/tweakpane-plugin-thumbnail-list
+# Tweakpane thumbnail list plugin
 
-[![NPM Package @kitschpatrol/tweakpane-plugin-thumbnail-list](https://img.shields.io/npm/v/@kitschpatrol/tweakpane-plugin-thumbnail-list.svg)](https://npmjs.com/package/@kitschpatrol/tweakpane-plugin-thumbnail-list)
+[Tweakpane][tweakpane] plugin for selecting from a thumbnail list.
 
-## Overview
+![Preview](https://github.com/donmccurdy/tweakpane-plugin-thumbnail-list/raw/main/assets/preview.png)
 
-**This is a fork of [tweakpane-plugin-thumbnail-list](https://github.com/donmccurdy/tweakpane-plugin-thumbnail-list) with Tweakpane 4.0 compatibility and externalized dependencies.**
+## Installation
 
-It's under consideration for inclusion in the [svelte-tweakpane-ui](https://kitschpatrol.com/svelte-tweakpane-ui) project, but may be useful to others who wish to use the plugin with Tweakpane 4.0.
+### Browser
+```html
+<script src="tweakpane.min.js"></script>
+<script src="tweakpane-plugin-thumbnail-list.min.js"></script>
+<script>
+  const pane = new Tweakpane.Pane();
+  pane.registerPlugin(TweakpaneThumbnailListPlugin);
+</script>
+```
 
-Please refer to the [upstream project](https://github.com/donmccurdy/tweakpane-plugin-thumbnail-list) for documentation and other details.
 
-## Background
+### Package
+```js
+import { Pane } from 'tweakpane';
+import * as TweakpaneThumbnailListPlugin from 'tweakpane-plugin-thumbnail-list';
 
-The [Rollup](https://rollupjs.org) configuration provided in the [Tweakpane plugin template](https://github.com/tweakpane/plugin-template) does not externalize [`@tweakpane/core`](https://github.com/cocopon/tweakpane/tree/main/packages/core) as a production dependency.
+const pane = new Pane();
+pane.registerPlugin(TweakpaneThumbnailListPlugin);
+```
 
-Instead, it gets built into the single-file plugin artifact, which is what's published to NPM and imported by plugin consumers. This makes it easy to import as an ES module from a URL, but means that larger projects importing multiple Tweakpane plugins end up with duplicate copies of the `@tweakpane/core` code, adding about ~100 Kb to the final minified build for each plugin after the first.
 
-Externalizing this dependency allows build tools like [vite](https://vitejs.dev) to share a single instance of the `@tweakpane/core` code across multiple plugins.
+## Usage
+```js
+const params = {
+  weave: 'p',
+};
 
-If you're not using a bundler, direct ESM imports from URLs can still work by defining the `@tweakpane/core` dependency in an [importmap](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap).
+pane.addInput(params, 'weave', {
+  view: 'thumbnail-list',
+  options: [
+    {text: 'Plain', value: 'p', src: './plain.png', data: {...}},
+    {text: 'Twill', value: 't', src: './twill.png', data: {...}},
+    {text: 'Basket', value: 'b', src: './basket.png', data: {...}},
+    {text: 'Herringbone', value: 'h', src: './herringbone.png', data: {...}},
+  ]
+}).on('change', (ev) => {
+  console.log(ev.value);
+});
+```
 
-## Implementation notes
+### Option properties:
 
-A [PR on the upstream project](https://github.com/donmccurdy/tweakpane-plugin-thumbnail-list/pull/6) with Tweakpane 4.0 support is pending.
+| property | type   | required | description                    |
+|----------|--------|----------|--------------------------------|
+| text     | string | ✓        | Human-readable label.          |
+| value    | string | ✓        | Unique identifier.             |
+| src      | url    | ✓        | Thumbnail URL.                 |
+| data     | any    |          | Any application-specific data. |
 
-Note the package's name change from `tweakpane-plugin-thumbnail-list` to `@kitschpatrol/tweakpane-plugin-thumbnail-list`.
+## CSS Theming
 
-PNPM is used as the package manager.
+Inherits CSS variables from [Tweakpane's theming system](https://cocopon.github.io/tweakpane/theming.html), with the following additions:
 
-## Versioning
+```css
+:root {
+  /** Max height of dropdown panel. */
+  --tp-plugin-thumbnail-list-height: 400px;
 
-The [upstream project](https://github.com/donmccurdy/tweakpane-plugin-thumbnail-list) is currently zero-versioned. I've proposed version 1.0.0 in the pull-request with Tweakpane 4.0 support. Since a merge doesn't seem imminent, updates to the fork will follow normal [semver](https://semver.org/) practices instead of remaining in sync with hypothetical future updates to the upstream project. I might revisit this if the upstream repo springs back to life.
+  /** Fixed width of dropdown panel. */
+  --tp-plugin-thumbnail-list-width: 200px;
+
+  /** Width/height of (square) thumbnail. */
+  --tp-plugin-thumbnail-list-thumb-size: 20px;
+}
+```
+
+## Contributing
+
+### Quickstart
+- Install dependencies:
+  ```
+  % npm install
+  ```
+- Build source codes and watch changes:
+  ```
+  % npm watch
+  ```
+- Open `test/browser.html` to see the result.
+
+
+### File structure
+```
+|- src
+|  |- sass ............ Plugin CSS
+|  |- index.ts ........ Entrypoint
+|  |- plugin.ts ....... Plugin
+|  |- controller.ts ... Controller for the custom view
+|  `- view.ts ......... Custom view
+|- dist ............... Compiled files
+`- test
+   `- browser.html .... Plugin labo
+```
+
+
+[tweakpane]: https://github.com/cocopon/tweakpane/
