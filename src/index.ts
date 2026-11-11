@@ -7,3 +7,6 @@ export const id = 'textarea'
 export const css: string = pluginCss
 
 export const plugins: TpPlugin[] = [TweakpaneThumbnailListPlugin]
+
+export type { Thumbnail } from './controller'
+export type { PluginInputParams } from './plugin'

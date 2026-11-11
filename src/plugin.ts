@@ -3,7 +3,7 @@ import { CompositeConstraint, createPlugin, parseRecord } from '@tweakpane/core'
 import type { Thumbnail } from './controller'
 import { PluginController } from './controller'
 
-type PluginInputParams = BaseInputParams & {
+export type PluginInputParams = BaseInputParams & {
 	options: Thumbnail[]
 	view: 'thumbnail-list'
 }
