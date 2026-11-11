@@ -1,5 +1,5 @@
 // Import core styles
-@use '../../node_modules/@tweakpane/core/lib/sass/tp';
+@use '@tweakpane/core/lib/sass/tp';
 
 // You can use CSS variables for styling. See declarations for details:
 // ../../node_modules/@tweakpane/core/lib/sass/common/_defs.scss
@@ -15,17 +15,19 @@
  * - slbl: inline selection label
  */
 .#{tp.$prefix}-thumbv {
-	@extend %tp-input;
-
 	--tptl-thumb-size: var(
 		--tp-plugin-thumbnail-list-thumb-size,
 		tp.cssVar('container-unit-size')
 	);
 
+	@extend %tp-input;
+
+	cursor: pointer;
 	position: relative;
 	height: tp.cssVar('container-unit-size');
-	cursor: pointer;
 
+	// Cancels the hover background from %tp-input on every device, including touch screens.
+	// stylelint-disable-next-line defensive-css/no-accidental-hover
 	&,
 	&:hover {
 		background: none;
@@ -37,20 +39,19 @@
 
 	/* Overlay */
 	&_ovl {
-		z-index: 100;
-		box-shadow: 0 2px 4px tp.cssVar('base-shadow');
-		display: none;
 		position: absolute;
+		z-index: 100;
 		top: tp.cssVar('container-unit-size');
 		right: 0;
-		overflow-x: hidden;
-		overflow-y: auto;
-		max-height: var(--tp-plugin-thumbnail-list-height, 400px);
+		overflow: hidden auto;
+		display: none;
 		width: var(--tp-plugin-thumbnail-list-width, 200px);
-		background: tp.cssVar('base-bg');
+		max-height: var(--tp-plugin-thumbnail-list-height, 400px);
 		padding: tp.cssVar('container-v-padding') tp.cssVar('container-h-padding');
-		border-bottom-left-radius: tp.cssVar('base-border-radius');
 		border-bottom-right-radius: tp.cssVar('base-border-radius');
+		border-bottom-left-radius: tp.cssVar('base-border-radius');
+		background: tp.cssVar('base-bg');
+		box-shadow: 0 2px 4px tp.cssVar('base-shadow');
 
 		.#{tp.$prefix}-thumbv_-active & {
 			display: block;
@@ -61,7 +62,7 @@
 	&_opt,
 	&_sopt {
 		display: flex;
-		flex-direction: row;
+		flex-flow: row nowrap;
 		color: tp.cssVar('input-fg');
 	}
 
@@ -89,12 +90,12 @@
 	/* Image and Select Image */
 	&_thmb,
 	&_sthmb {
+		position: relative;
 		flex-shrink: 0;
 		width: tp.cssVar('container-unit-size');
 		height: 100%;
 		border-radius: tp.cssVar('blade-border-radius');
 		background-size: contain;
-		position: relative;
 	}
 
 	&_sthmb {
@@ -102,8 +103,8 @@
 	}
 
 	&_thmb {
-		margin-right: 2em;
 		width: var(--tptl-thumb-size);
+		margin-right: 2em;
 	}
 
 	[aria-selected] &_thmb::after {
@@ -122,13 +123,13 @@
 	}
 
 	&_slbl {
+		box-sizing: border-box;
+		width: 100%;
+		min-width: 0;
 		margin-left: 4px;
 		padding: 0 4px;
-		background-color: tp.cssVar('input-bg');
 		border-radius: tp.cssVar('blade-border-radius');
-		box-sizing: border-box;
-		min-width: 0;
-		width: 100%;
+		background-color: tp.cssVar('input-bg');
 	}
 
 	&_lbl {

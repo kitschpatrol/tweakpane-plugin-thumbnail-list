@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta charset="UTF-8" />
+		<title>Tweakpane thumbnail-list demo</title>
+		<style>
+			body {
+				--tp-plugin-thumbnail-list-height: 500px;
+				--tp-plugin-thumbnail-list-width: 200px;
+				--tp-plugin-thumbnail-list-thumb-size: 30px;
+				background-size: cover;
+			}
+
+			@media (prefers-color-scheme: dark) {
+				body {
+					color: #ffffff;
+					background: #202020;
+				}
+
+				a {
+					color: #ffffff;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<script type="module">
+			import * as Tweakpane from 'tweakpane'
+			import * as TweakpaneThumbnailListPlugin from '../src/index.ts'
+
+			const params = {
+				number: '0.5',
+				color: 0x4285f4,
+				image: '001',
+			}
+
+			const pane = new Tweakpane.Pane({ title: 'Input bindings' })
+			pane.registerPlugin(TweakpaneThumbnailListPlugin)
+
+			pane.addBinding(params, 'number', { min: 0, max: 1 })
+			pane.addBinding(params, 'color', { view: 'color' })
+			pane
+				.addBinding(params, 'image', {
+					view: 'thumbnail-list',
+					options: [
+						{ text: 'Item #1', value: '001', src: 'https://picsum.photos/600?v=001' },
+						{ text: 'Item #2', value: '002', src: 'https://picsum.photos/600?v=002' },
+						{ text: 'Item #3', value: '003', src: 'https://picsum.photos/600?v=003' },
+						{ text: 'Item #4', value: '004', src: 'https://picsum.photos/600?v=004' },
+						{ text: 'Item #5', value: '005', src: 'https://picsum.photos/600?v=005' },
+						{ text: 'Item #6', value: '006', src: 'https://picsum.photos/600?v=006' },
+					],
+				})
+				.on('change', (ev) => {
+					const value = ev.value
+					console.log('selected', value)
+					document.body.style.backgroundImage = value ? `url(${ev.value.src})` : ''
+				})
+
+			window.pane = pane
+		</script>
+	</body>
+</html>

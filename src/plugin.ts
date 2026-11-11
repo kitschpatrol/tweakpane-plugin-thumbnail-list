@@ -1,90 +1,79 @@
-import {
-	BaseInputParams,
-	BindingTarget,
-	CompositeConstraint,
-	createPlugin,
-	InputBindingPlugin,
-	parseRecord,
-} from '@tweakpane/core';
+import type { BaseInputParams, BindingTarget, InputBindingPlugin } from '@tweakpane/core'
+import { CompositeConstraint, createPlugin, parseRecord } from '@tweakpane/core'
+import type { Thumbnail } from './controller'
+import { PluginController } from './controller'
 
-import {PluginController, Thumbnail} from './controller.js';
+type PluginInputParams = BaseInputParams & {
+	options: Thumbnail[]
+	view: 'thumbnail-list'
+}
 
-interface PluginInputParams extends BaseInputParams {
-	view: 'thumbnail-list';
-	options: Thumbnail[];
+/** Writes the selected thumbnail's value, or `undefined` for no selection. */
+function writeThumbnail(target: BindingTarget, inValue: null | Thumbnail): void {
+	target.write(inValue?.value)
 }
 
 /**
  * Thumbnail List Plugin
  *
  * `InputBindingPlugin<In, Ex, P>` means...
+ *
  * - The plugin receives the bound value as `Ex`,
- * - converts `Ex` into `In` and holds it
+ * - Converts `Ex` into `In` and holds it
  * - P is the type of the parsed parameters
  */
 export const TweakpaneThumbnailListPlugin: InputBindingPlugin<
-	Thumbnail | null,
+	null | Thumbnail,
 	string,
 	PluginInputParams
 > = createPlugin({
-	id: 'thumbnail-list',
-	type: 'input',
-
 	accept(exValue: unknown, params: Record<string, unknown>) {
-		if (typeof exValue !== 'string') return null;
+		if (typeof exValue !== 'string') {
+			return null
+		}
 
 		const result = parseRecord<PluginInputParams>(params, (p) => ({
-			view: p.required.constant('thumbnail-list'),
 			options: p.required.array(
 				p.required.object({
+					data: p.optional.custom((d) => d),
+					src: p.required.string,
 					text: p.required.string,
 					value: p.required.string,
-					src: p.required.string,
-					data: p.optional.custom((d) => d),
 				}),
 			),
-		}));
+			view: p.required.constant('thumbnail-list'),
+		}))
 
-		if (!result) return null;
+		if (!result) {
+			return null
+		}
 
 		return {
 			initialValue: exValue,
 			params: result,
-		};
+		}
 	},
-
 	binding: {
-		/** Converts an external unknown value into the internal value. */
-		reader(_args) {
-			return (exValue: unknown): Thumbnail | null => {
-				return (
-					_args.params.options.find((option) => option.value === exValue) ||
-					null
-				);
-			};
-		},
-
 		/** Creates a value constraint from the user input. */
 		constraint(_args) {
-			return new CompositeConstraint([]);
+			return new CompositeConstraint([])
 		},
-
-		/**
-		 * Use `target.write()` to write the primitive value to the target,
-		 * or `target.writeProperty()` to write a property of the target.
-		 */
+		/** Converts an external unknown value into the internal value. */
+		reader(args) {
+			return (exValue: unknown): null | Thumbnail =>
+				args.params.options.find((option) => option.value === exValue) ?? null
+		},
 		writer(_args) {
-			return (target: BindingTarget, inValue) => {
-				target.write(inValue?.value);
-			};
+			return writeThumbnail
 		},
 	},
-
 	controller(args) {
 		return new PluginController(args.document, {
 			value: args.value,
 			valueOptions: args.params.options,
 			viewProps: args.viewProps,
-		});
+		})
 	},
-});
+	id: 'thumbnail-list',
+	type: 'input',
+})
