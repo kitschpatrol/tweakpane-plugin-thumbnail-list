@@ -82,8 +82,10 @@
 			background: tp.cssVar('input-bg');
 		}
 
-		&:hover {
-			opacity: 1;
+		@media (hover: hover) {
+			&:hover {
+				opacity: 1;
+			}
 		}
 	}
 
