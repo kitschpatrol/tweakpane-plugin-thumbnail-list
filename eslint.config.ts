@@ -14,24 +14,28 @@ export default eslintConfig(
 			'e18e/prefer-array-to-reversed': 'off',
 			'e18e/prefer-array-to-sorted': 'off',
 			'e18e/prefer-array-to-spliced': 'off',
+			// Tweakpane uses ClassName() factory
+			'new-cap': ['error', { capIsNewExceptions: ['ClassName'] }],
 			// The default fix adds ES2024's v flag.
 			'require-unicode-regexp': ['error', { requireFlag: 'u' }],
+			// Plugin-specific: don't fight upstream
+			'ts/naming-convention': 'off',
+			// Tweakpane uses null sentinels
+			'ts/no-restricted-types': 'off',
+			// Tweakpane binds methods in constructors
+			'ts/unbound-method': 'off',
 			// These fixes use ES2023's toReversed and toSorted.
 			'unicorn/no-array-reverse': 'off',
 			'unicorn/no-array-sort': 'off',
+			// Tweakpane uses null sentinels
+			'unicorn/no-null': 'off',
 		},
 	},
 	{
-		// Upstream code follows Tweakpane core's conventions: null sentinels, trailing-underscore
-		// private members, the ClassName() factory, methods bound in constructors, and TpError throws.
-		files: ['src/**/*.ts', 'test/**/*.ts'],
+		// Readme examples list options in documentation order.
+		files: ['readme.md/*.{js,ts}'],
 		rules: {
-			'new-cap': ['error', { capIsNewExceptions: ['ClassName'] }],
-			'ts/naming-convention': 'off',
-			'ts/no-restricted-types': 'off',
-			'ts/only-throw-error': 'off',
-			'ts/unbound-method': 'off',
-			'unicorn/no-null': 'off',
+			'import/no-unresolved': 'off',
 		},
 	},
 )

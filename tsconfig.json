@@ -1,8 +1,10 @@
 {
 	"extends": "@kitschpatrol/typescript-config",
 	"compilerOptions": {
+		// The shipped JavaScript targets ES2022 browsers, so reject newer syntax and APIs.
 		"target": "ES2022",
 		"lib": ["ES2022", "DOM"],
+		// Vite's client types declare the ?inline style import.
 		"types": ["node", "vite/client"]
 	}
 }

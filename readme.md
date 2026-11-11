@@ -50,7 +50,7 @@ See the [upstream readme](https://github.com/donmccurdy/tweakpane-plugin-thumbna
 
 The plugin requires [Tweakpane 4](https://www.npmjs.com/package/tweakpane).
 
-If you're using the `/lite` export path of the plugin without a bundler, you'll need to provide the [@tweakpane/core](https://www.npmjs.com/package/@tweakpane/core) library as well.
+The `/lite` export path imports [@tweakpane/core](https://www.npmjs.com/package/@tweakpane/core) rather than bundling it. It is installed as a dependency of this plugin, so only projects without a bundler need to provide it directly.
 
 <!-- installation -->
 
