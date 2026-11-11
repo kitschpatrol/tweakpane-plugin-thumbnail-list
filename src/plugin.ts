@@ -8,9 +8,21 @@ export type PluginInputParams = BaseInputParams & {
 	view: 'thumbnail-list'
 }
 
-/** Writes the selected thumbnail's value, or `undefined` for no selection. */
-function writeThumbnail(target: BindingTarget, inValue: null | Thumbnail): void {
-	target.write(inValue?.value)
+/**
+ * Writes the selected thumbnail's value, or `undefined` for no selection. A
+ * bound value that matches no option also reads as no selection, so it stays in
+ * place instead of being replaced with `undefined`.
+ */
+function createThumbnailWriter(
+	options: Thumbnail[],
+): (target: BindingTarget, inValue: null | Thumbnail) => void {
+	return (target, inValue) => {
+		if (inValue === null && options.every((option) => option.value !== target.read())) {
+			return
+		}
+
+		target.write(inValue?.value)
+	}
 }
 
 /**
@@ -63,8 +75,8 @@ export const TweakpaneThumbnailListPlugin: InputBindingPlugin<
 			return (exValue: unknown): null | Thumbnail =>
 				args.params.options.find((option) => option.value === exValue) ?? null
 		},
-		writer(_args) {
-			return writeThumbnail
+		writer(args) {
+			return createThumbnailWriter(args.params.options)
 		},
 	},
 	controller(args) {

@@ -183,6 +183,14 @@ describe('thumbnail list plugin', () => {
 		expect(selectLabel.textContent).toBe('Third')
 	})
 
+	it('keeps an unknown bound value instead of writing undefined on refresh', () => {
+		const { binding, getSelectedValues, params } = setup()
+		params.image = 'missing'
+		binding.refresh()
+		expect(params.image).toBe('missing')
+		expect(getSelectedValues()).toEqual([''])
+	})
+
 	it('selects the none option for an unknown initial value', () => {
 		const { getSelectedValues, selectLabel } = setup('missing')
 		expect(getSelectedValues()).toEqual([''])

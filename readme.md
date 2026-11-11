@@ -97,10 +97,10 @@ Both entries share the `dist/tweakpane-plugin-thumbnail-list.d.ts` declarations,
 
 | File                                        | Original | Gzip   | Brotli |
 | ------------------------------------------- | -------- | ------ | ------ |
-| tweakpane-plugin-thumbnail-list.js          | 13.7 kB  | 4.3 kB | 3.7 kB |
+| tweakpane-plugin-thumbnail-list.js          | 14 kB    | 4.4 kB | 3.8 kB |
 | tweakpane-plugin-thumbnail-list.min.js      | 7.9 kB   | 2.8 kB | 2.5 kB |
-| tweakpane-plugin-thumbnail-list.lite.js     | 9 kB     | 3 kB   | 2.6 kB |
-| tweakpane-plugin-thumbnail-list.lite.min.js | 6.3 kB   | 2.3 kB | 2 kB   |
+| tweakpane-plugin-thumbnail-list.lite.js     | 9.3 kB   | 3.1 kB | 2.7 kB |
+| tweakpane-plugin-thumbnail-list.lite.min.js | 6.4 kB   | 2.3 kB | 2 kB   |
 
 <!-- /size-table -->
 
