@@ -21,31 +21,38 @@
 
 ## Overview
 
-A thumbnail selector for Tweakpane 4, forked from [Don McCurdy's tweakpane-plugin-thumbnail-list](https://github.com/donmccurdy/tweakpane-plugin-thumbnail-list). The upstream repository is archived; this fork maintains its Tweakpane 4 support.
+This is a fork of [Don McCurdy's](https://github.com/donmccurdy) [tweakpane-plugin-thumbnail-list](https://github.com/donmccurdy/tweakpane-plugin-thumbnail-list) with Tweakpane 4 support and externalized dependencies.
 
-The [upstream README](https://github.com/donmccurdy/tweakpane-plugin-thumbnail-list#readme) describes the plugin's features and options. This fork may be useful to applications that need the plugin with Tweakpane 4, including [Svelte Tweakpane UI](https://kitschpatrol.com/svelte-tweakpane-ui).
+This allows for smaller bundled file sizes in projects using multiple Tweakpane plugins.
+
+The upstream repository is archived; this fork will maintain a version with Tweakpane 4 support.
+
+See the [upstream readme](https://github.com/donmccurdy/tweakpane-plugin-thumbnail-list#readme) for details on the original plugin and its usage.
 
 ## Fork changes
 
 - Publishes as `@kitschpatrol/tweakpane-plugin-thumbnail-list` instead of `tweakpane-plugin-thumbnail-list`.
-- Bundles `@tweakpane/core` at the package root like a standard Tweakpane plugin, and adds a `/lite` entry that imports core instead so bundlers can share one copy across plugins.
-- Exports public parameter types from the package root and `/lite`.
-- Builds TypeScript and inline SCSS with tsdown, with a Vite playground, Vitest tests, ksc linting, and chagent release notes.
+- Adds a `/lite` export that imports `@tweakpane/core` instead of bundling it so projects can share one copy of `core` across multiple plugins.
+- Exports public parameter types.
+- Migrates the repository structure to align with the Tweakpane plugin template provided by [@kitschpatrol/create-project](https://github.com/kitschpatrol/create-project), which includes:
+  - [pnpm](https://pnpm.io/) instead of npm for local development
+  - [tsdown](https://tsdown.dev/) for bundling, type generation, and SCSS processing
+  - [vite](https://vite.dev/) for live-reloading the demo project
+  - [vitest](https://vitest.dev/) for automated tests
+  - [ksc](https://github.com/kitschpatrol/shared-config) for linting and shared configuration
+  - [chagent](https://github.com/kitschpatrol/chagent) for release notes
 - Ports the original Tweakpane 3 plugin to Tweakpane 4. The [upstream migration PR](https://github.com/donmccurdy/tweakpane-plugin-thumbnail-list/pull/6) was closed without merging.
 - Uses the bundle ID `thumbnail-list` instead of `textarea`, so both plugins can register their styles in the same pane.
 
 ## Getting started
 
-<!-- dependencies({ headingLevel: 3 }) -->
-
 ### Dependencies
 
-- [Node.js](https://nodejs.org/) 18.0.0 or newer
-- [tweakpane](https://www.npmjs.com/package/tweakpane) `^4.0.0` _(peer dependency)_
+The plugin requires [Tweakpane 4](https://www.npmjs.com/package/tweakpane).
 
-<!-- /dependencies -->
+If you're using the `/lite` export path of the plugin without a bundler, you'll need to provide the [@tweakpane/core](https://www.npmjs.com/package/@tweakpane/core) library as well.
 
-<!-- install({ headingLevel: 3 }) -->
+<!-- installation -->
 
 ### Installation
 
@@ -55,16 +62,16 @@ Add it to your project:
 npm install @kitschpatrol/tweakpane-plugin-thumbnail-list
 ```
 
-<!-- /install -->
+<!-- /installation -->
 
 ## Usage
 
 ```ts
-import * as ThumbnailListPlugin from '@kitschpatrol/tweakpane-plugin-thumbnail-list'
+import * as TweakpanePluginThumbnailList from '@kitschpatrol/tweakpane-plugin-thumbnail-list'
 import { Pane } from 'tweakpane'
 
 const pane = new Pane()
-pane.registerPlugin(ThumbnailListPlugin)
+pane.registerPlugin(TweakpanePluginThumbnailList)
 
 const parameters = { choice: 'first' }
 pane.addBinding(parameters, 'choice', {
@@ -78,56 +85,15 @@ pane.addBinding(parameters, 'choice', {
 
 Use `addBinding` with this fork; the upstream examples use the older `addInput` API. See the [upstream usage documentation](https://github.com/donmccurdy/tweakpane-plugin-thumbnail-list#usage) for the remaining options. To share core through your bundler, import `@kitschpatrol/tweakpane-plugin-thumbnail-list/lite` instead.
 
-## Distribution
+## Implementation notes
 
-The build writes four ES module files directly under `dist/`:
+The [Rollup](https://rollupjs.org) configuration provided in the [Tweakpane plugin template](https://github.com/tweakpane/plugin-template) does not externalize [`@tweakpane/core`](https://github.com/cocopon/tweakpane/tree/main/packages/core) as a production dependency.
 
-| File                                          | Core     | Minified |
-| --------------------------------------------- | -------- | -------- |
-| `tweakpane-plugin-thumbnail-list.js`          | Bundled  | No       |
-| `tweakpane-plugin-thumbnail-list.min.js`      | Bundled  | Yes      |
-| `tweakpane-plugin-thumbnail-list.lite.js`     | External | No       |
-| `tweakpane-plugin-thumbnail-list.lite.min.js` | External | Yes      |
+Instead, it gets built into the single-file plugin artifact, which is what's published to NPM and imported by plugin consumers. This makes it easy to import as an ES module from a URL, but means that larger projects importing multiple Tweakpane plugins end up with duplicate copies of the `@tweakpane/core` code, adding about \~100 Kb to the final minified build for each plugin after the first.
 
-The package root resolves to `.js` and bundles `@tweakpane/core`. The `/lite` entry resolves to `.lite.js` and imports core, so an application bundler can share one copy across plugins. Direct URL imports of a lite file need an import map for core. Tweakpane itself is a peer dependency and is never bundled. Use one entry consistently when relying on the identity of exported classes.
+Externalizing this dependency allows build tools like [vite](https://vite.dev) to share a single instance of the `@tweakpane/core` code across multiple plugins.
 
-Both entries share the `dist/tweakpane-plugin-thumbnail-list.d.ts` declarations, so import public types from the package root or `/lite`. The export map contains only the package root, `/lite`, and `/package.json`. JavaScript targets ES2022, and no source maps are emitted.
-
-<!-- size-table({ files: ["dist/tweakpane-plugin-thumbnail-list.js", "dist/tweakpane-plugin-thumbnail-list.min.js", "dist/tweakpane-plugin-thumbnail-list.lite.js", "dist/tweakpane-plugin-thumbnail-list.lite.min.js"], precision: 1 }) -->
-
-| File                                        | Original | Gzip   | Brotli |
-| ------------------------------------------- | -------- | ------ | ------ |
-| tweakpane-plugin-thumbnail-list.js          | 14 kB    | 4.4 kB | 3.8 kB |
-| tweakpane-plugin-thumbnail-list.min.js      | 7.9 kB   | 2.8 kB | 2.5 kB |
-| tweakpane-plugin-thumbnail-list.lite.js     | 9.3 kB   | 3.1 kB | 2.7 kB |
-| tweakpane-plugin-thumbnail-list.lite.min.js | 6.4 kB   | 2.3 kB | 2 kB   |
-
-<!-- /size-table -->
-
-## Development
-
-<!-- development-dependencies({ headingLevel: 3 }) -->
-
-### Development dependencies
-
-- [Node.js](https://nodejs.org/) ^24.16.0 || >=26.3.0
-- [pnpm](https://pnpm.io/) 12.16.1
-
-<!-- /development-dependencies -->
-
-| Command        | Purpose                                                                 |
-| -------------- | ----------------------------------------------------------------------- |
-| `pnpm install` | Install development dependencies.                                       |
-| `pnpm build`   | Build the four distributions and the declaration bundle with tsdown.    |
-| `pnpm dev`     | Open the Vite playground in `demo/index.html`.                          |
-| `pnpm watch`   | Rebuild JavaScript, declarations, and imported Sass partials on change. |
-| `pnpm test`    | Run the Vitest suite in `test/`.                                        |
-| `pnpm fix`     | Apply ksc formatting and lint fixes.                                    |
-| `pnpm lint`    | Check code, types, styles, dependencies, and generated documentation.   |
-
-Styles live in `src/styles/` and compile to a CSS string through an `?inline` import, which Tweakpane installs when the plugin is registered. Build before running `pnpm fix` or `pnpm lint`, since mdat reads `dist/` for the size table.
-
-The release script calls chagent to update the changelog while preparing the version bump, then builds and publishes the package.
+If you're not using a bundler, direct ESM imports from URLs can still work by defining the `@tweakpane/core` dependency in an [importmap](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap).
 
 ## Versioning
 
@@ -145,12 +111,8 @@ This repository uses [@kitschpatrol/shared-config](https://github.com/kitschpatr
 
 <!-- /contributing -->
 
-<!-- license -->
-
 ## License
 
-[MIT](license.txt) © Don McCurdy
+Original plugin: [MIT](license.txt) © Don McCurdy
 
-<!-- /license -->
-
-Fork modifications: [MIT](license.txt) © [Eric Mika](https://ericmika.com).
+Fork modifications: [MIT](license.txt) © [Eric Mika](https://ericmika.com)

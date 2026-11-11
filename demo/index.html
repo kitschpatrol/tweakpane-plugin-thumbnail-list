@@ -27,7 +27,7 @@
 	<body>
 		<script type="module">
 			import * as Tweakpane from 'tweakpane'
-			import * as TweakpaneThumbnailListPlugin from '../src/index.ts'
+			import * as TweakpanePluginThumbnailList from '../src/index.ts'
 
 			const params = {
 				number: '0.5',
@@ -36,7 +36,7 @@
 			}
 
 			const pane = new Tweakpane.Pane({ title: 'Input bindings' })
-			pane.registerPlugin(TweakpaneThumbnailListPlugin)
+			pane.registerPlugin(TweakpanePluginThumbnailList)
 
 			pane.addBinding(params, 'number', { min: 0, max: 1 })
 			pane.addBinding(params, 'color', { view: 'color' })
