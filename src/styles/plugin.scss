@@ -17,7 +17,7 @@
 .#{tp.$prefix}-thumbv {
 	--tptl-thumb-size: var(
 		--tp-plugin-thumbnail-list-thumb-size,
-		tp.cssVar('container-unit-size')
+		#{tp.cssVar('container-unit-size')}
 	);
 
 	@extend %tp-input;
