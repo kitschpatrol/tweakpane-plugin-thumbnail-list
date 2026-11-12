@@ -5,12 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.5-fork.2] - 2026-11-11
+
+### Added
+
+- Add a `/lite` entry and minified lite distribution that import `@tweakpane/core` so applications can share it across plugins.
+- Export the `Thumbnail` and `PluginInputParams` types from the package root and `/lite`.
+
+### Changed
+
+- Bundle `@tweakpane/core` into the default and minified ES modules instead of importing it externally.
+- **Breaking:** Restrict package imports to the root, `/lite`, and `/package.json` through an export map; consolidate declarations into `dist/tweakpane-plugin-thumbnail-list.d.ts`.
+- **Breaking:** Raise the shipped JavaScript target from ES6 to ES2022.
+- **Breaking:** Restrict the declared Node.js requirement to versions 18, 20, 22, 24, and 26 or newer, dropping odd-numbered versions below 26.
+
+### Fixed
+
+- Use the bundle ID `thumbnail-list` so thumbnail-list and textarea plugin styles can coexist in the same pane.
+- Compile the thumbnail-size fallback correctly so thumbnails use Tweakpane's container unit size when no custom size is provided.
+- Apply thumbnail option hover effects only on devices that support hovering.
+- Preserve bound values that match no thumbnail option when refreshing instead of replacing them with `undefined`.
+
+### Documentation
+
+- Add installation instructions and Tweakpane 4 `addBinding` examples; explain `/lite` imports and when core must be provided directly.
+- Document the template-based development tooling and contribution guidelines.
 
 ### Maintenance
 
 - Update the development package manager to pnpm 12.16.1.
 - Update GitHub release actions and retrieve npm publishing one-time passwords through the 1Password CLI.
+- Replace Rollup and separate declaration compilation with tsdown builds for JavaScript, bundled declarations, and inline Sass; add publint and Are the Types Wrong validation.
+- Replace the static browser test server with a Vite demo playground that reloads source changes.
+- Adopt `@kitschpatrol/shared-config` and `ksc` for linting and formatting, with shared workspace settings and VS Code integration.
+- Add Vitest tests using happy-dom for registration, compiled styles, selection, bound-value refreshes, disabled state, and disposal.
+- Add build, lint, and test CI on Linux, macOS, and Windows.
+- Add a monthly dependency-update workflow using `ksc-update` to prepare pull requests.
+- Integrate chagent into release preparation and build the package after the version bump.
+- Refresh development dependencies and pnpm to 12.18.0; update CI, metadata synchronization, and fork maintenance actions.
 
 ## [1.0.5-fork.1] - 2026-10-15
 
@@ -141,7 +173,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set up TypeScript/Sass builds, linting and formatting, watch mode, and versioned release archives.
 
-[Unreleased]: https://github.com/kitschpatrol/tweakpane-plugin-thumbnail-list/compare/1.0.5-fork.1...HEAD
 [0.1.0]: https://github.com/kitschpatrol/tweakpane-plugin-thumbnail-list/releases/tag/v0.1.0
 [0.1.1]: https://github.com/kitschpatrol/tweakpane-plugin-thumbnail-list/compare/v0.1.0...v0.1.1
 [0.1.2]: https://github.com/kitschpatrol/tweakpane-plugin-thumbnail-list/compare/v0.1.1...v0.1.2
@@ -151,3 +182,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.3]: https://github.com/kitschpatrol/tweakpane-plugin-thumbnail-list/compare/1.0.2...1.0.3
 [1.0.4]: https://github.com/kitschpatrol/tweakpane-plugin-thumbnail-list/compare/1.0.3...1.0.4
 [1.0.5-fork.1]: https://github.com/kitschpatrol/tweakpane-plugin-thumbnail-list/compare/1.0.4...1.0.5-fork.1
+[1.0.5-fork.2]: https://github.com/kitschpatrol/tweakpane-plugin-thumbnail-list/compare/1.0.5-fork.1...1.0.5-fork.2
